@@ -1,0 +1,32 @@
+<form [formGroup]="taskForm">
+<div class="ui-g-7">
+<span style="font-size:0.9em;color:gray;padding:0px 5px"> Task no.: <label>{{id}}</label></span> <br><br>
+  <div class="input-group">
+    <span class="ui-float-label">
+      <input id="float-input" type="text"  pInputText formControlName="title"> 
+      <label for="float-input">Title</label>
+  </span>
+  </div>
+
+  <div class="input-group">
+    <span class="ui-float-label">
+      <input id="float-input" type="text"  pInputText  formControlName="description"> 
+      <label for="float-input">Desciption</label>
+    </span>
+  </div>
+
+  <div class="input-group">
+    <p-dropdown [options]="priorityList" formControlName="priority" placeholder="Select priority" optionLabel="name" [showClear]="true" [style]="{'width':'95%', 'padding':'10px 7px'}"></p-dropdown>
+
+  </div>
+
+  <button pButton type="button" label="Save" [disabled]="!taskForm.valid" (click)="saveFormData($event,taskForm)"></button>
+
+</div>
+
+<div class="ui-g-5">
+   <p-calendar formControlName="date" [inline]="true" ></p-calendar>
+
+</div>
+
+</form>

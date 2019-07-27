@@ -1,0 +1,94 @@
+<p-toolbar>
+    <div class="ui-toolbar-group-left" style="padding: 5px 0px;">
+       <h3>Task Management</h3>
+        
+        <!-- <p-splitButton label="Save" icon="pi pi-check" [model]="items" styleClass="ui-button-warning"></p-splitButton> -->
+    </div>
+    
+    <div class="ui-toolbar-group-right" style="padding: 20px 0px;">
+        <!--<button pButton type="button"><i class="pi pi-plus"></i>&nbsp; New Task</button>-->
+        
+        
+<button pButton type="button" label="New" icon=" pi pi-plus" (click)="showDialog()"></button>
+    </div>
+</p-toolbar>
+
+<!-- DASHBOARD -->
+<p-growl [(value)]="msgs" ></p-growl>
+<!-- PENDING -->
+<p-panel [style]="{'margin-top':'3em'}" class="ui-g-4">
+    <p-header>
+        <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px;font-weight:bolder">Pending</span>
+            
+        </div>
+    </p-header>
+    <div class="ui-panel-content">
+    <ul  id="pending" *ngFor="let i of pending|orderBy:taskOrder; let indx=index">
+    
+    <li #task  style="background-color: orangered !important" pDraggable="t1" (onDragStart)="dragStart($event,i,i.id,'pending')" (onDragEnd)="dragEnd($event)">
+       <div class="left" style="padding:5px ">
+            <i class="pi pi-chevron-circle-up" style="font-size: 1.5em" (click)="changePriority('increase',i)" [class.hide]="(i.priority.id)==1"></i><br>
+            <i class="pi pi-chevron-circle-down" style="font-size: 1.5em" (click)="changePriority('decrease',i)" [class.hide]="(i.priority.id)==5"></i>
+        </div> 
+
+        <p-card >
+        
+             {{i.title}} <div class="right"><i class="far fa-edit" (click)="editTask($event,i)"></i> &nbsp;&nbsp;&nbsp;<i class="far fa-trash-alt" (click)="deleteTask($event,'pending',i)"></i></div>
+        </p-card>
+        </li>
+    </ul>
+    </div>
+ 
+</p-panel>
+
+<!-- IN-PROGRESS -->
+<p-panel [style]="{'margin-top':'3em'}" class="ui-g-4">
+    <p-header>
+        <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px;font-weight:bolder">In progress</span>
+            
+        </div>
+    </p-header>
+     <div class="ui-panel-content" pDroppable="t1" (onDrop)="drop($event,'inComplete')">
+    <ul *ngFor="let i of inComplete; let indx=index" id="inComplete">
+    <li #task style="background-color: yellow !important"  pDraggable="t1" (onDragStart)="dragStart($event,i,i.id,'inComplete')" (onDragEnd)="dragEnd($event)">
+        <p-card >
+            {{i.title}}<div class="right"><i  class="far fa-trash-alt" (click)="deleteTask($event,'inComplete',i)"></i></div>
+        </p-card>
+        </li>
+    </ul>
+    </div>
+    
+</p-panel>
+
+
+<!-- COMPLETED -->
+<p-panel [style]="{'margin-top':'3em'}" class="ui-g-4">
+    <p-header>
+        <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px;font-weight:bolder">Completed</span>
+            
+        </div>
+    </p-header>
+        <div class="ui-panel-content" pDroppable="t1" (onDrop)="drop($event,'complete')">
+    <ul *ngFor="let i of completed; let indx=index" id="completed">
+    <li #task style="background-color: green !important">
+        <p-card >
+            {{i.title}}
+        </p-card>
+        </li>
+    </ul>
+    </div>
+   
+</p-panel>
+
+
+<!-- Modal Form -->
+
+<p-dialog header="Add/Edit Task" [(visible)]="display_dialog" (onHide)="clearForm()"  [modal]="true" [responsive]="true" [width]="800"  [minWidth]="200" [minHeight]="300" [minY]="120" 
+        [baseZIndex]="10000">
+    
+        <app-task-form (newTask)="addToPendingList($event)"  [editData]="editableData" [editableIndex]="editIndex"></app-task-form>
+</p-dialog>
+
